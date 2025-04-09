@@ -90,15 +90,14 @@ EPOCHS = 35
 for epoch in range(0,EPOCHS):
   train_one(DEVICE,train_dl,model,loss_fn,optimizer,epoch,loss_display_interval = 200)
 
-  train_loss,res_b,res_c = test(DEVICE,train_dl,model,loss_fn,len(class_names))
-  train_acc = res_b/len(train_ds)
+  train_loss,train_accuracy,res_c = test(DEVICE,train_dl,model,loss_fn,len(class_names))
   train_f1 = multiclass_f1_score_aggregation(res_c,len(class_names))
 
-  valid_loss,res_b,res_c = test(DEVICE,valid_dl,model,loss_fn,len(class_names))
-  valid_acc = res_b/len(valid_ds)
+  valid_loss,valid_accuracy,res_c = test(DEVICE,valid_dl,model,loss_fn,len(class_names))
+
   valid_f1 = multiclass_f1_score_aggregation(res_c,len(class_names))
-  print(f'train loss {train_loss}, train accuracy {train_acc:.5f}, train f1 score {train_f1:.5f}')
-  print(f'valid loss {valid_loss}, train accuracy {valid_acc:.5f} ,train f1 score {valid_f1:.5f}')
+  print(f'train loss {train_loss}, train accuracy {train_accuracy:.5f}, train f1 score {train_f1:.5f}')
+  print(f'valid loss {valid_loss}, valid accuracy {valid_accuracy:.5f} ,train f1 score {valid_f1:.5f}')
   print('========================================================')
 
   if valid_loss < best_vloss:
@@ -108,10 +107,10 @@ for epoch in range(0,EPOCHS):
         print('Saved best model to model_best_vloss.pth')
 
   train_perf['loss'].append(train_loss)
-  train_perf['accuracy'].append(train_acc)
+  train_perf['accuracy'].append(train_accuracy)
   train_perf['f1'].append(train_f1)
   valid_perf['loss'].append(valid_loss)
-  valid_perf['accuracy'].append( valid_acc)
+  valid_perf['accuracy'].append( valid_accuracy)
   valid_perf['f1'].append(valid_f1)
 
 

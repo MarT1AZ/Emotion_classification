@@ -12,7 +12,7 @@ class ConvoModule(nn.Module):
                   nn.ReLU(),
                   nn.BatchNorm2d(out_channels),
                   nn.MaxPool2d((2,2)),
-                  nn.Dropout2d(0.25)
+                  nn.Dropout2d(0.4)
                   )
 
   def forward(self,x):
@@ -36,7 +36,7 @@ class FacialNet(nn.Module):
                                    nn.Linear(256,512),
                                    nn.ReLU(),
                                    nn.BatchNorm1d(512),
-                                   nn.Linear(512,7))
+                                   nn.Linear(512,6))
 
   def forward(self,x):
     out = self.Conv1(x)
@@ -81,7 +81,7 @@ class FacialNet_finegrained(nn.Module):
                                    nn.Linear(256,512),
                                    nn.ReLU(),
                                    nn.BatchNorm1d(512),
-                                   nn.Linear(512,7))
+                                   nn.Linear(512,6))
 
   def forward(self,x):
     out = self.Conv1(x)
@@ -106,3 +106,4 @@ class FacialNet_finegrained(nn.Module):
     out = self.ConvMod4(out)
     feature_maps.append(out)
     return feature_maps
+  
