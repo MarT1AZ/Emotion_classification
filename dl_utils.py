@@ -39,6 +39,20 @@ def multiclass_f1_score_aggregation(confusion_values_dict,num_class):
     # return the micro average
   return np.array(f1_list).mean()
 
+def calculate_accuracy(pred,y):
+  # y is a label tensor in shape (batch, 1)
+  # pred is in shape (batch, len_class) aka one hot encoded
+  
+  # print(pred.shape)
+  # print(y.shape)
+  # pred is now (batch, 1)
+  pred = torch.flatten(pred.detach())
+  y = torch.flatten(y.detach())
+  # print(pred)
+  # print(y)
+  return torch.sum((pred == y).int()).item()
+
+
 
 
 def train_one(device,dl,model,loss_fn,optim, epoch,loss_display_interval):
@@ -73,7 +87,7 @@ def test(device,dl,model,loss_fn,num_class):
   num_class
   model.eval()
   total_loss = 0.0
-  total_accurate = 0
+  total_accurate = 0.0
 
   class_confusion_dict = {}
 
@@ -93,16 +107,17 @@ def test(device,dl,model,loss_fn,num_class):
 
       loss = loss_fn(pred, y).item()
       pred = pred.argmax(1)
+      accuracy_count = calculate_accuracy(pred,y)
 
       total_loss = total_loss + loss
 
-      accurate_count = multiclass_accuracy(pred,
-                                    y,
-                                    average = 'micro') * dl.batch_size
+      # accurate_count = multiclass_accuracy(pred,
+      #                               y,
+      #                               average = 'micro') * dl.batch_size
                                     # should be integer between 0 to 64 no less no more
                                     # use micro averaging to get the global number of prediction right reggardless of class
 
-      total_accurate = total_accurate + accurate_count
+      total_accurate = total_accurate + accuracy_count
 
       running_confusion_values = multiclass_confusion_value(pred, y, num_class)
 
